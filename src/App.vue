@@ -4,8 +4,8 @@ import Home from './components/Home.vue'
 
 <template>
   <div class='container-fluid border-bottom py-2'>
-    <div class='d-flex justify-content-between align-items-center pt-2'>
-      <div>
+    <div class='row row-cols-lg-3 row-cols-md-2 row-cols-sm-1'>
+      <div class='col-6 col-12'>
         <h5 class='' style='color: #0F2744;'>Create Invoice</h5>
         <div class='d-flex'>
           <h6>cash</h6>
@@ -18,15 +18,18 @@ import Home from './components/Home.vue'
           <h6>Credit</h6>
         </div>
       </div>
-      <div class='d-flex align-items-baseline'>
-        <h5 class='common-text'>Balance Due</h5>
-        <h3 class='px-2 text-style-common' style='color: #020C60'>0.00</h3>
-        <p class='pe-2 pe-4'>PRs</p>
-        <i class="fa-solid fa-gear fs-3"></i>
+      <div class='col-6 col-lg-8'>
+
+        <div class='d-flex justify-content-md-end justify-content-lg-end justify-content-xl-end align-items-baseline'>
+          <h5 class='common-text'>Balance Due</h5>
+          <h3 class='px-2 text-style-common' style='color: #020C60;'><img src='src/assets/' alt=''></h3>
+          <p class='pe-2 pe-4'>PRs</p>
+          <i class='fa-solid fa-gear fs-3'></i>
+        </div>
       </div>
     </div>
   </div>
-  <Home/>
+  <Home />
 </template>
 
 <style scoped>

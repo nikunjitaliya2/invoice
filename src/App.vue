@@ -22,9 +22,10 @@ import Home from './components/Home.vue'
 
         <div class='d-flex justify-content-md-end justify-content-lg-end justify-content-xl-end align-items-baseline'>
           <h5 class='common-text'>Balance Due</h5>
-          <h3 class='px-2 text-style-common' style='color: #020C60;'><img src='src/assets/' alt=''></h3>
-          <p class='pe-2 pe-4'>PRs</p>
-          <i class='fa-solid fa-gear fs-3'></i>
+          <h3 class='px-2 text-style-common' style='color: #020C60;'><img src='./assets/0.00.png' alt='0 image'></h3>
+          <p class='pe-2 pe-3 common-text'>PRs</p>
+          <span><img src='./assets/settings.png' alt='setting' style='cursor: pointer'></span>
+<!--          <i class='fa-solid fa-gear fs-3' style='cursor: pointer'></i>-->
         </div>
       </div>
     </div>

@@ -131,7 +131,7 @@ const deleteField = (item) => {
           type='date'
           name='date'
           value='2023-01-01'
-          validation='required|after:2023/05/01'
+          validation='required|after:2010-01-01'
           validation-visibility='live'
         />
       </div>
@@ -193,7 +193,7 @@ const deleteField = (item) => {
     </div>
     <div v-for='applicant in applicants' :key='applicant.id'>
       <form @submit.prevent='SaveProductDetails(applicant.id)' v-on:input='SaveProductDetails(applicant.id)'>
-        <div class='row row-cols-2 g-2 g-lg-3 py-2'>
+        <div class='row row-cols-2 g-lg-2'>
           <div class='col-md-6 col-lg-4 col-12'>
 <!--            <label for='NameItem' class='form-label d-block d-sm-block d-md-block d-lg-none'>Name of item</label>-->
 <!--            <input type='text' class='form-control' id='NameItem' v-model='applicant.itemName'-->
@@ -279,10 +279,13 @@ const deleteField = (item) => {
               validation='required|character'
             />
           </div>
-          <div class='col-md-4  col-lg-1 d-flex align-items-center  '>
-            <i class='fa-solid fa-pen fs-5 px-1' style='cursor: pointer '></i>
-            <i class='fa-solid fa-trash fs-5 px-1' @click='deleteField(applicant)' style='cursor: pointer '></i>
-            <i class='fa-solid fa-plus fs-5' style='cursor: pointer ' @click='AddField'></i>
+          <div class='col-md-4  col-lg-2 d-flex align-items-center justify-content-around'>
+<!--            <i class='fa-solid fa-pen fs-5 px-1' style='cursor: pointer '></i>-->
+<!--            <i class='fa-solid fa-trash fs-5 px-1' @click='deleteField(applicant)' style='cursor: pointer '></i>-->
+<!--            <i class='fa-solid fa-plus fs-5' style='cursor: pointer ' @click='AddField'></i>-->
+            <span><img src='../assets/edit.png' alt='edit' style='cursor: pointer '></span>
+            <span><img src='../assets/Delete.png' alt='delete' @click='deleteField(applicant)' style='cursor: pointer '></span>
+            <span><img src='../assets/Dot-outline.jpg' class='img-fluid w-50' alt='add'  style='cursor: pointer ' @click='AddField'></span>
           </div>
         </div>
       </form>

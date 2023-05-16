@@ -1,16 +1,21 @@
 <script setup>
 import { reactive, ref } from 'vue'
+import Invoice from './invoice.vue'
 
-// toggle button
-const value = ref('')
 const discount = ref(0)
 const GstPlus = ref(0)
+const totalQuality = ref(0)
+const totalRate = ref(0)
+const count = ref(0)
+const RoundOff= ref(0)
 const TotalAmount = ref(0)
+const IsRoundOff = ref(true)
+const InvoiceDetailsAdd  = ref([])
 
 const InvoiceDetails = reactive({
   InvoiceNumber: 0,
   referenceNumber: 0,
-  // Date: "dd-mm-yyyy",
+  Date: '',
   AccountName: '',
   SalesLedger: ''
 })
@@ -26,11 +31,15 @@ const discountTotal = async (Quality, Rate, DiscountTotal, gst) => {
 
 }
 
-const totalQuality = ref(0)
-const totalRate = ref(0)
-const count = ref(0)
-const RoundOff= ref(0)
-const IsRoundOff = ref(true)
+const printInvoice = () => {
+  InvoiceDetailsAdd.value = [InvoiceDetails,applicants,total]
+  console.log('InvoiceDetailsAdd.value',InvoiceDetailsAdd.value);
+}
+
+const total = reactive({
+  TotalAmount: RoundOff,
+  totalQuality: totalQuality
+})
 
 
 const SaveProductDetails = async (id) => {
@@ -42,11 +51,7 @@ const SaveProductDetails = async (id) => {
   // total of quality
   totalQuality.value = applicants.reduce((acc, obj) => acc + obj.Qlt, 0)
   totalRate.value = applicants.reduce((acc, obj) => acc + obj.Amount, 0)
-
-
-
   RoundOff.value = Math.round(totalRate.value)
-  console.log('RoundOff.value', RoundOff.value)
 }
 
 
@@ -99,8 +104,7 @@ const AddField = async () => {
     Discount: '',
     Amount: '',
     Delete: '',
-    Edit: '',
-    // Add: ''
+    Edit: ''
   })
 
 }
@@ -112,6 +116,8 @@ const deleteField = async (id) => {
     }
   })
 }
+
+
 
 </script>
 
@@ -125,6 +131,7 @@ const deleteField = async (id) => {
           name='Invoice'
           placeholder='001'
           type='number'
+          v-model='InvoiceDetails.InvoiceNumber'
           validation='required|character'
         />
       </div>
@@ -132,6 +139,7 @@ const deleteField = async (id) => {
         <FormKit
           label='Reference No.'
           class='form-control'
+          v-model='InvoiceDetails.referenceNumber'
           name='Reference No'
           type='number'
           validation='required|character'
@@ -142,6 +150,7 @@ const deleteField = async (id) => {
           label='Date'
           type='date'
           name='date'
+          v-model='InvoiceDetails.Date'
           value='2023-01-01'
           validation='required|after:2010-01-01'
           validation-visibility='live'
@@ -155,6 +164,7 @@ const deleteField = async (id) => {
           class='form-control'
           placeholder='John Doe'
           name='account Name'
+          v-model='InvoiceDetails.AccountName'
           type='text'
           validation='required|character'
         />
@@ -163,6 +173,7 @@ const deleteField = async (id) => {
         <FormKit
           type='select'
           label='Sales Ledger'
+          v-model='InvoiceDetails.SalesLedger'
           name='sales'
           :options="[
               'Default',
@@ -313,9 +324,15 @@ const deleteField = async (id) => {
         </div>
       </div>
     </div>
+    <div class='d-none'>
+      <Invoice :InvoiceDetails="InvoiceDetailsAdd"/>
+    </div>
     <div class='w-100 py-2 d-flex justify-content-md-end justify-content-sm-center justify-content-center gap-4'>
       <button type='button' class='btn btn-outline-secondary px-5 rounded-pill'>Cancel</button>
-      <button type='button' @click='SaveProductDetails' class='btn btn-primary px-5 rounded-pill'>Save</button>
+      <button type='button' @click='printInvoice'  class='btn btn-primary px-5 rounded-pill'>
+<!--        <RouterLink to='/invoice'>Save</RouterLink>-->
+        Save
+      </button>
     </div>
   </div>
 </template>

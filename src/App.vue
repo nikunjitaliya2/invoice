@@ -3,10 +3,10 @@ import Home from './components/Home.vue'
 </script>
 
 <template>
-  <div class='container-fluid border-bottom py-2'>
-    <div class='row row-cols-lg-3 row-cols-md-2 row-cols-sm-1'>
+  <div class='container-fluid py-2 bg-color'>
+    <div class='row row-cols-lg-3 border-bottom row-cols-md-2 row-cols-sm-1'>
       <div class='col-6 col-12'>
-        <h5 class='' style='color: #0F2744;'>Create Invoice</h5>
+        <h5 style='color: #0F2744;' class='fw-bold'>Create Invoice</h5>
         <div class='d-flex'>
           <h6>cash</h6>
           <div class='px-2'>

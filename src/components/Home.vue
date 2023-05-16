@@ -23,6 +23,7 @@ const discountTotal = async (Quality, Rate, DiscountTotal, gst) => {
   GstPlus.value = (gst / 100) * (discount.value)
 
   TotalAmount.value = discount.value + GstPlus.value
+
 }
 
 const totalQuality = ref(0)
@@ -34,16 +35,6 @@ const SaveProductDetails = async (id) => {
   await discountTotal(applicants[id].Qlt, applicants[id].Rate, applicants[id].Discount, applicants[id].Gst)
 
   applicants[id].Amount = TotalAmount.value
-
-  console.log('check is working ----->>',applicants)
-
-  // console.log('SaveProductDetails log ->',applicants[id].Qlt, applicants[id].Rate, applicants[id].Discount, applicants[id].Gst)
-  // console.log('log ->',applicants[id])
-
-  // Testing
-  // applicants.filter((e) => {
-  //   console.log('items details -----> ',e.Qlt)
-  // })
 
   // total of quality
   totalQuality.value = applicants.reduce((acc, obj) => acc + obj.Qlt, 0)
@@ -60,7 +51,9 @@ const applicants = reactive([
     Rate: '',
     Gst: '',
     Discount: '',
-    Amount: ''
+    Amount: '',
+    Delete: '',
+    Edit: ''
   },
   {
     id: ++count.value,
@@ -70,12 +63,11 @@ const applicants = reactive([
     Rate: '',
     Gst: '',
     Discount: '',
-    Amount: ''
-  }
-])
-
-const AddField = async () => {
-  applicants.push({
+    Amount: '',
+    Delete: '',
+    Edit: ''
+  },
+  {
     id: ++count.value,
     itemName: '',
     Qlt: '',
@@ -83,13 +75,34 @@ const AddField = async () => {
     Rate: '',
     Gst: '',
     Discount: '',
-    Amount: ''
+    Amount: '',
+    Add : '',
+  }
+])
+
+const AddField = async () => {
+  applicants.unshift({
+    id: ++count.value,
+    itemName: '',
+    Qlt: '',
+    Uom: '',
+    Rate: '',
+    Gst: '',
+    Discount: '',
+    Amount: '',
+    Delete: '',
+    Edit: '',
+    // Add: ''
   })
 
 }
 
-const deleteField = (item) => {
-  applicants.splice(item, 1)
+const deleteField = async (id) => {
+  await applicants.map((item, index) => {
+    if (item.id === id && applicants.length > 2) {
+      applicants.splice(index, 1)
+    }
+  })
 }
 
 </script>
@@ -98,7 +111,7 @@ const deleteField = (item) => {
   <div class='container-fluid py-2 '>
     <div class='row row-cols-lg-3 row-cols-md-2 row-cols-sm-1'>
       <div class='col col-12'>
-<!--        <label class='form-label'>Invoice No</label>-->
+        <!--        <label class='form-label'>Invoice No</label>-->
         <!--        <input type='number' v-model='InvoiceDetails.InvoiceNumber' class='form-control' id='InvoiceNo'-->
         <!--               placeholder='001'>-->
         <FormKit
@@ -111,7 +124,7 @@ const deleteField = (item) => {
         />
       </div>
       <div class='col col-12'>
-<!--        <label for='referenceNo' class='form-label'>Reference No.</label>-->
+        <!--        <label for='referenceNo' class='form-label'>Reference No.</label>-->
         <!--        <input type='number' v-model='InvoiceDetails.referenceNumber' class='form-control' id='referenceNo'-->
         <!--               placeholder='001'>-->
 
@@ -124,7 +137,7 @@ const deleteField = (item) => {
         />
       </div>
       <div class='col col-12'>
-<!--        <label class='form-label'>Date</label>-->
+        <!--        <label class='form-label'>Date</label>-->
         <!--        <input type='date' class='form-control' id='Date' placeholder='Thursday, 21-02-2019'>-->
         <FormKit
           label='Date'
@@ -138,26 +151,26 @@ const deleteField = (item) => {
     </div>
     <div class='row row-cols-lg-2 row-cols-md-2 row-cols-sm-1'>
       <div class='col col-12'>
-<!--        <label for='PartyName' class='form-label'>Party A/c Name</label>-->
+        <!--        <label for='PartyName' class='form-label'>Party A/c Name</label>-->
         <!--        <input type='text' class='form-control' v-model='InvoiceDetails.AccountName' id='PartyName' placeholder='001'>-->
         <FormKit
           label='Party A/c Name'
           class='form-control'
           placeholder='John Doe'
           name='account Name'
-          type='number'
+          type='text'
           validation='required|character'
         />
       </div>
       <div class='col col-12'>
-<!--        <label for='salesLadger' class='form-lab  el'>Sales Ledger</label>-->
-<!--                <select class='form-select' id='salesLadger' aria-label='Default select example'-->
-<!--                        v-model='InvoiceDetails.SalesLedger'>-->
-<!--                  <option selected>Default</option>-->
-<!--                  <option value='1'>Amazon Sale</option>-->
-<!--                  <option value='2'>Flipcart</option>-->
-<!--                  <option value='3'>Alibaba</option>-->
-<!--                </select>-->
+        <!--        <label for='salesLadger' class='form-lab  el'>Sales Ledger</label>-->
+        <!--                <select class='form-select' id='salesLadger' aria-label='Default select example'-->
+        <!--                        v-model='InvoiceDetails.SalesLedger'>-->
+        <!--                  <option selected>Default</option>-->
+        <!--                  <option value='1'>Amazon Sale</option>-->
+        <!--                  <option value='2'>Flipcart</option>-->
+        <!--                  <option value='3'>Alibaba</option>-->
+        <!--                </select>-->
         <FormKit
           type='select'
           label='Sales Ledger'
@@ -174,7 +187,8 @@ const deleteField = (item) => {
     <div class='row row-cols-lg-2 row-cols-md-2 row-cols-sm-1'>
       <div class='col col-12'>
         <p class='m-0'>Address : Surat, Gujarat,</p>
-        <p class='m-0'>Phone No. : 95687-69846 , Email id : abc@gmail.com</p>
+<!--        <p class='m-0'></P>-->
+        <P>hone No. : 95687-69846 , Email id : abc@gmail.com</p>
       </div>
       <div class='col col-12'>
         <p class='m-0'>Sale Account</p>
@@ -193,112 +207,113 @@ const deleteField = (item) => {
     </div>
     <div v-for='applicant in applicants' :key='applicant.id'>
       <form @submit.prevent='SaveProductDetails(applicant.id)' v-on:input='SaveProductDetails(applicant.id)'>
-        <div class='row row-cols-2 g-lg-2'>
+        <div class='row row-cols-2 g-lg-2 py-2'>
           <div class='col-md-6 col-lg-4 col-12'>
-<!--            <label for='NameItem' class='form-label d-block d-sm-block d-md-block d-lg-none'>Name of item</label>-->
-<!--            <input type='text' class='form-control' id='NameItem' v-model='applicant.itemName'-->
-<!--                   placeholder='lorem ipsums'>-->
-            <FormKit
-              class='form-control'
-              placeholder="Ex. iphone"
-              name='Item Name'
-              type='text'
-              v-model='applicant.itemName'
-              validation='required|character'
-            />
+            <label for='NameItem' class='form-label d-block d-sm-block d-md-block d-lg-none'>Name of item</label>
+            <input type='text' class='form-control' id='NameItem' v-model='applicant.itemName'
+                   placeholder='lorem ipsums'>
+            <!--            <FormKit-->
+            <!--              class='form-control'-->
+            <!--              placeholder="Ex. iphone"-->
+            <!--              name='Item Name'-->
+            <!--              type='text'-->
+            <!--              v-model='applicant.itemName'-->
+            <!--              validation='required|character'-->
+            <!--            />-->
           </div>
           <div class='col-md-6 col-lg-1 col-12'>
-<!--            <label for='NameItem' class='form-label d-block d-sm-block d-md-block d-lg-none'>Qlt</label>-->
-<!--            <input type='number' class='form-control' id='quality' v-model='applicant.Qlt' placeholder='10'>-->
-            <FormKit
-              class='form-control'
-              placeholder='10'
-              v-model='applicant.Qlt'
-              name='Qlt'
-              type='number'
-              validation='required|character'
-            />
+            <label for='quality' class='form-label d-block d-sm-block d-md-block d-lg-none'>Qlt</label>
+            <input type='number' class='form-control' id='quality' v-model='applicant.Qlt' placeholder='10'>
+            <!--            <FormKit-->
+            <!--              class='form-control'-->
+            <!--              placeholder='10'-->
+            <!--              v-model='applicant.Qlt'-->
+            <!--              name='Qlt'-->
+            <!--              type='number'-->
+            <!--              validation='required|character'-->
+            <!--            />-->
           </div>
           <div class='col-md-4 col-lg-1 col-12'>
-<!--            <label for='NameItem' class='form-labd-sm-block d-md-block d-lg-none'>UOM</label>-->
-<!--            <input type='number' class='form-control' id='uom' v-model='applicant.Uom' placeholder='MRTS'>-->
-            <FormKit
-              class='form-control'
-              placeholder='10'
-              v-model='applicant.Uom'
-              name='uom'
-              type='number'
-            />
-<!--              validation='required|character'-->
+            <label for='uom' class='form-labd-sm-block d-md-block d-lg-none'>UOM</label>
+            <input type='number' class='form-control' id='uom' v-model='applicant.Uom' placeholder='MRTS'>
+            <!--            <FormKit-->
+            <!--              class='form-control'-->
+            <!--              placeholder='10'-->
+            <!--              v-model='applicant.Uom'-->
+            <!--              name='uom'-->
+            <!--              type='number'-->
+            <!--            />-->
+            <!--              validation='required|character'-->
           </div>
           <div class='col-md-4 col-lg-1 col-12'>
-<!--            <label for='NameItem' class='form-label d-block d-sm-block d-md-block d-lg-none'>Rate per</label>-->
-<!--            <input type='number' class='form-control' id='ratePer' v-model='applicant.Rate' placeholder='$30'>-->
-             <FormKit
-             class='form-control'
-              placeholder='$30'
-              v-model='applicant.Rate'
-              name='Rate'
-              type='number'
-             validation='required|character'
-             />
+            <label for='ratePer' class='form-label d-block d-sm-block d-md-block d-lg-none'>Rate per</label>
+            <input type='number' class='form-control' id='ratePer' v-model='applicant.Rate' placeholder='$30'>
+            <!--             <FormKit-->
+            <!--             class='form-control'-->
+            <!--              placeholder='$30'-->
+            <!--              v-model='applicant.Rate'-->
+            <!--              name='Rate'-->
+            <!--              type='number'-->
+            <!--             validation='required|character'-->
+            <!--             />-->
           </div>
           <div class='col-md-4 col-lg-1 col-12'>
-<!--            <label for='NameItem' class='form-label d-block d-sm-block d-md-block d-lg-none'>GST Rate</label>-->
-<!--            <input type='number' class='form-control' v-model='applicant.Gst' id='gstRate' placeholder='10'>-->
-            <FormKit
-              class='form-control'
-              placeholder='10'
-              v-model='applicant.Gst'
-              name='Gst'
-              type='number'
-              validation='required|character'
-            />
+            <label for='gstRate' class='form-label d-block d-sm-block d-md-block d-lg-none'>GST Rate</label>
+            <input type='number' class='form-control' v-model='applicant.Gst' id='gstRate' placeholder='10'>
+            <!--            <FormKit-->
+            <!--              class='form-control'-->
+            <!--              placeholder='10'-->
+            <!--              v-model='applicant.Gst'-->
+            <!--              name='Gst'-->
+            <!--              type='number'-->
+            <!--              validation='required|character'-->
+            <!--            />-->
           </div>
           <div class='col-md-4 col-lg-1 col-12'>
-<!--            <label for='NameItem' class='form-label d-block d-sm-block d-md-block d-lg-none'>Discount</label>-->
-<!--            <input type='number' class='form-control' id='discount' v-model='applicant.Discount' placeholder='10'>-->
-            <FormKit
-              class='form-control'
-              placeholder='5'
-              v-model='applicant.Discount'
-              name='Gst'
-              type='number'
-              validation='required|character'
-            />
+            <label for='discount' class='form-label d-block d-sm-block d-md-block d-lg-none'>Discount</label>
+            <input type='number' class='form-control' id='discount' v-model='applicant.Discount' placeholder='10'>
+            <!--            <FormKit-->
+            <!--              class='form-control'-->
+            <!--              placeholder='5'-->
+            <!--              v-model='applicant.Discount'-->
+            <!--              name='Gst'-->
+            <!--              type='number'-->
+            <!--              validation='required|character'-->
+            <!--            />-->
           </div>
           <div class='col-md-4 col-lg-1 col-12'>
-<!--            <label for='NameItem' class='form-label d-block d-sm-block d-md-block d-lg-none'>Amount</label>-->
-<!--            <input type='number' class='form-control' id='Amount' v-model='applicant.Amount' placeholder='$10'>-->
-            <FormKit
-              class='form-control'
-              v-model='applicant.Amount'
-              name='Amount'
-              type='number'
-              placeholder='10'
-              validation='required|character'
-            />
+            <label for='Amount' class='form-label d-block d-sm-block d-md-block d-lg-none'>Amount</label>
+            <input type='number' class='form-control' id='Amount' v-model='applicant.Amount' placeholder='$10'>
+            <!--            <FormKit-->
+            <!--              class='form-control'-->
+            <!--              v-model='applicant.Amount'-->
+            <!--              name='Amount'-->
+            <!--              type='number'-->
+            <!--              placeholder='10'-->
+            <!--              validation='required|character'-->
+            <!--            />-->
           </div>
-          <div class='col-md-4  col-lg-2 d-flex align-items-center justify-content-around'>
-<!--            <i class='fa-solid fa-pen fs-5 px-1' style='cursor: pointer '></i>-->
-<!--            <i class='fa-solid fa-trash fs-5 px-1' @click='deleteField(applicant)' style='cursor: pointer '></i>-->
-<!--            <i class='fa-solid fa-plus fs-5' style='cursor: pointer ' @click='AddField'></i>-->
-            <span><img src='../assets/edit.png' alt='edit' style='cursor: pointer '></span>
-            <span><img src='../assets/Delete.png' alt='delete' @click='deleteField(applicant)' style='cursor: pointer '></span>
-            <span><img src='../assets/Dot-outline.jpg' class='img-fluid w-50' alt='add'  style='cursor: pointer ' @click='AddField'></span>
+          <div class='col-md-2 col-lg-1 d-flex align-items-center '>
+            <!--            <i class='fa-solid fa-pen fs-5 px-1' style='cursor: pointer '></i>-->
+            <!--            <i class='fa-solid fa-trash fs-5 px-1' @click='deleteField(applicant)' style='cursor: pointer '></i>-->
+            <!--            <i class='fa-solid fa-plus fs-5' style='cursor: pointer ' @click='AddField'></i>-->
+            <span v-if='applicant.Edit === ""'><img src='../assets/edit.png' alt='edit' style='cursor: pointer '></span>
+            <span v-if='applicant.Delete === ""'><img src='../assets/Delete.png' alt='delete' @click='deleteField(applicant.id)' style='cursor: pointer '></span>
+            <span v-if='applicant.Add === ""'><img src='../assets/Dot-outline.png' class='img-fluid' alt='add' style='width: 40%;cursor: pointer '
+                       @click='AddField'></span>
           </div>
         </div>
       </form>
     </div>
-    <div class='row'>
-      <div class='col-lg-4 col-auto'>
-        <p class='fw-bold py-3 '>Total</p>
+    <div class='row py-2'>
+      <div class='col-lg-4 col-4'>
+        <p class='fw-bold'>Total</p>
       </div>
-      <div class='col-lg-5 col-auto py-3'>
+      <div class='col-lg-5 col-4'>
         <span class='fw-bold d-block d-sm-block d-md-block d-lg-none'>Total Quelity</span>
-        <p class='fw-bold '>{{ totalQuality === '' ? 0 : totalQuality }}</p>
+        <p class='fw-bold '>{{ totalQuality }}</p>
       </div>
-      <div class='col py-3'>
+      <div class='col-lg col-4'>
         <span class='fw-bold d-block d-sm-block d-md-block d-lg-none'>Total Rate</span>
         <p class='fw-bold'>{{ totalRate }}</p>
       </div>

@@ -22,4 +22,10 @@
     button {
         display: none;
     }
+    .btn{
+        display: none;
+    }
+    input{
+        display: none;
+    }
 }

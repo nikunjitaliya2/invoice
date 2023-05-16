@@ -324,13 +324,12 @@ const deleteField = async (id) => {
         </div>
       </div>
     </div>
-    <div class='d-none'>
+<!--    <div class='d-none'>-->
       <Invoice :InvoiceDetails="InvoiceDetailsAdd"/>
-    </div>
+<!--    </div>-->
     <div class='w-100 py-2 d-flex justify-content-md-end justify-content-sm-center justify-content-center gap-4'>
       <button type='button' class='btn btn-outline-secondary px-5 rounded-pill'>Cancel</button>
       <button type='button' @click='printInvoice'  class='btn btn-primary px-5 rounded-pill'>
-<!--        <RouterLink to='/invoice'>Save</RouterLink>-->
         Save
       </button>
     </div>

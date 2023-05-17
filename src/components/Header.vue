@@ -1,0 +1,86 @@
+<script setup></script>
+<template>
+  <div class='container-fluid py-2 bg-color'>
+    <div class='row row-cols-lg-3 border-bottom row-cols-md-2 row-cols-sm-1'>
+      <div class='col-6 col-12'>
+        <h5 style='color: #0F2744;' class='fw-bold'>Create Invoice</h5>
+        <div class='d-flex'>
+          <h6>cash</h6>
+          <div class='px-2'>
+            <label class="switch">
+              <input type="checkbox">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <h6>Credit</h6>
+        </div>
+      </div>
+      <div class='col-6 col-lg-8'>
+
+        <div class='d-flex justify-content-md-end justify-content-lg-end justify-content-xl-end align-items-baseline'>
+          <h5 class='common-text'>Balance Due</h5>
+          <h3 class='px-2 text-style-common' style='color: #020C60;'><img src='../assets/0.00.png' alt='0 image'></h3>
+          <p class='pe-2 pe-3 common-text'>PRs</p>
+          <span><img src='../assets/settings.png' alt='setting' style='cursor: pointer'></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<style scoped>
+body {
+  background: #E0E0E0;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 45px;
+  height: 20px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  border-radius: 100px;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 13px;
+  right: 0;
+  left: 2px;
+  border-radius: 100px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+</style>

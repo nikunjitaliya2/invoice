@@ -1,65 +1,31 @@
 <script setup>
 import { reactive, ref } from 'vue'
-import Invoice from './invoice.vue'
+import Header from './Header.vue'
+import router from '../router'
 
 const discount = ref(0)
 const GstPlus = ref(0)
 const totalQuality = ref(0)
 const totalRate = ref(0)
 const count = ref(0)
-const RoundOff= ref(0)
+const RoundOff = ref(0)
 const TotalAmount = ref(0)
 const IsRoundOff = ref(true)
-const InvoiceDetailsAdd  = ref([])
+const InvoiceDetailsAdd = ref([])
 
 const InvoiceDetails = reactive({
   InvoiceNumber: 0,
   referenceNumber: 0,
-  Date: '',
+  Date: '16-05-2023',
   AccountName: '',
   SalesLedger: ''
 })
-
-const discountTotal = async (Quality, Rate, DiscountTotal, gst) => {
-  // total discount and Item rate
-  discount.value = (Rate * Quality) - ((DiscountTotal / 100) * (Quality * Rate))
-
-  // console.log('discount.value',discount.value);
-  GstPlus.value = (gst / 100) * (discount.value)
-
-  TotalAmount.value = discount.value + GstPlus.value
-
-}
-
-const printInvoice = () => {
-  InvoiceDetailsAdd.value = [InvoiceDetails,applicants,total]
-  console.log('InvoiceDetailsAdd.value',InvoiceDetailsAdd.value);
-}
-
-const total = reactive({
-  TotalAmount: RoundOff,
-  totalQuality: totalQuality
-})
-
-
-const SaveProductDetails = async (id) => {
-  // await discountTotal(ItemList.Qlt, ItemList.Rate, ItemList.Discount, ItemList.Gst)
-  await discountTotal(applicants[id].Qlt, applicants[id].Rate, applicants[id].Discount, applicants[id].Gst)
-
-  applicants[id].Amount = TotalAmount.value
-
-  // total of quality
-  totalQuality.value = applicants.reduce((acc, obj) => acc + obj.Qlt, 0)
-  totalRate.value = applicants.reduce((acc, obj) => acc + obj.Amount, 0)
-  RoundOff.value = Math.round(totalRate.value)
-}
-
 
 const applicants = reactive([
   {
     id: 0,
     itemName: '',
-    Qlt: '',
+    Qlt: ref(0),
     Uom: '',
     Rate: '',
     Gst: '',
@@ -71,7 +37,7 @@ const applicants = reactive([
   {
     id: ++count.value,
     itemName: '',
-    Qlt: '',
+    Qlt: ref(0),
     Uom: '',
     Rate: '',
     Gst: '',
@@ -83,21 +49,21 @@ const applicants = reactive([
   {
     id: ++count.value,
     itemName: '',
-    Qlt: '',
+    Qlt: ref(0),
     Uom: '',
     Rate: '',
     Gst: '',
     Discount: '',
     Amount: '',
-    Add : '',
+    Add: ''
   }
 ])
 
 const AddField = async () => {
-  applicants.unshift({
+  applicants.splice(applicants.length - 1, 0, {
     id: ++count.value,
     itemName: '',
-    Qlt: '',
+    Qlt: ref(0),
     Uom: '',
     Rate: '',
     Gst: '',
@@ -106,23 +72,73 @@ const AddField = async () => {
     Delete: '',
     Edit: ''
   })
-
 }
+
+// const total = reactive({
+//   totalQuality: totalQuality
+// })
+const totalObj = reactive({
+  TotalAmount: totalRate,
+  totalQuality: totalQuality
+});
+
+const printInvoice = () => {
+  if(IsRoundOff.value){
+    totalObj.TotalAmount =  RoundOff
+    console.log('total ------>',IsRoundOff.value,totalObj)
+  }
+  else {
+    totalObj.TotalAmount =  totalRate.value
+    console.log('total ------>',IsRoundOff.value,totalObj)
+  }
+
+  InvoiceDetailsAdd.value = [InvoiceDetails, applicants, totalObj]
+  localStorage.setItem('invoice', JSON.stringify(InvoiceDetailsAdd.value))
+  router.push('/invoice')
+}
+
+// const discountTotal = (Quality, Rate, DiscountTotal, gst) => {
+//   // total discount and Item rate
+//   discount.value = (Rate * Quality) - ((DiscountTotal / 100) * (Quality * Rate))
+//
+//   // console.log('discount.value',discount.value);
+//   GstPlus.value = (gst / 100) * (discount.value)
+//   TotalAmount.value = discount.value + GstPlus.value
+// }
+
+const SaveProductDetails = (id) => {
+  const Quality = applicants.filter(li => li.id === id).map((item) => {
+    let discount = ((item.Rate * item.Qlt) - (item.Discount / 100) * (item.Qlt * item.Rate))
+    let gst = (item.Gst / 100) * (discount)
+    let totalAmounts = discount + gst
+    return { discount: discount, gst: gst, totalAmounts: totalAmounts }
+  })
+  if (id > 2) {
+    applicants[id - 1].Amount = Quality[0].totalAmounts
+  } else {
+    applicants[id].Amount = Quality[0].totalAmounts
+  }
+
+
+  totalQuality.value = applicants.map(li => li.Qlt).reduce((sum, val) => sum + val, 0)
+  totalRate.value = applicants.map(li => li.Amount).reduce((sum, val) => sum + val, 0)
+  RoundOff.value = Math.round(totalRate.value)
+  // discountTotal(applicants[id].Qlt, applicants[id].Rate, applicants[id].Discount, applicants[id].Gst)
+}
+
 
 const deleteField = async (id) => {
   await applicants.map((item, index) => {
-    if (item.id === id && applicants.length > 3) {
+    if (item.id === id && applicants.length > 2) {
       applicants.splice(index, 1)
     }
   })
 }
-
-
-
 </script>
 
 <template>
   <div class='container-fluid py-4 bg-color'>
+    <Header></Header>
     <div class='row row-cols-lg-3 row-cols-md-2 row-cols-sm-1'>
       <div class='col col-12'>
         <FormKit
@@ -187,7 +203,7 @@ const deleteField = async (id) => {
     <div class='row row-cols-lg-2 row-cols-md-2 row-cols-sm-1'>
       <div class='col col-12'>
         <p class='m-0'>Address : Surat, Gujarat,</p>
-<!--        <p class='m-0'></P>-->
+        <!--        <p class='m-0'></P>-->
         <p>phone No. : 95687-69846 , Email id : abc@gmail.com</p>
       </div>
       <div class='col col-12'>
@@ -232,7 +248,7 @@ const deleteField = async (id) => {
           <div class='col-md-4 col-lg-1 col-12'>
             <label for='gstRate' class='form-label d-block d-sm-block d-md-block d-lg-none'>GST Rate</label>
             <input type='number' class='form-control' v-model='applicant.Gst' id='gstRate' placeholder='10'>
-   
+
           </div>
           <div class='col-md-4 col-lg-1 col-12'>
             <label for='discount' class='form-label d-block d-sm-block d-md-block d-lg-none'>Discount</label>
@@ -242,13 +258,16 @@ const deleteField = async (id) => {
           <div class='col-md-4 col-lg-2 col-12'>
             <label for='Amount' class='form-label d-block d-sm-block d-md-block d-lg-none'>Amount</label>
             <input type='number' class='form-control' id='Amount' v-model='applicant.Amount' placeholder='$10'>
-    
+
           </div>
           <div class='col-md-2 col-lg-1 d-flex align-items-center '>
             <span v-if='applicant.Edit === ""'><img src='../assets/edit.png' alt='edit' style='cursor: pointer '></span>
-            <span v-if='applicant.Delete === ""'><img src='../assets/Delete.png' alt='delete' @click='deleteField(applicant.id)' style='cursor: pointer '></span>
-            <span v-if='applicant.Add === ""'><img src='../assets/Dot-outline.png' class='img-fluid' alt='add' style='width: 40%;cursor: pointer '
-                       @click='AddField'></span>
+            <span v-if='applicant.Delete === ""'><img src='../assets/Delete.png' alt='delete'
+                                                      @click='deleteField(applicant.id)'
+                                                      style='cursor: pointer '></span>
+            <span v-if='applicant.Add === ""'><img src='../assets/Dot-outline.png' class='img-fluid' alt='add'
+                                                   style='width: 40%;cursor: pointer '
+                                                   @click='AddField'></span>
           </div>
         </div>
       </form>
@@ -292,10 +311,10 @@ const deleteField = async (id) => {
       <div class='col-4 col-lg-4 col-12 order-md-0 order-0'>
         <div class=''>
           <div class='d-flex align-items-center gap-2'>
-            <input class='form-check-input' type='checkbox' id='flexCheckChecked' v-model='IsRoundOff'>
+            <input class='form-check-input' type='checkbox' name='round_off' id='round_off' v-model='IsRoundOff'>
             <span class='common-text'>Round Off</span>
             <div class='row'>
-              <div class='col' >
+              <div class='col'>
                 <input type='number' v-if='IsRoundOff' class='form-control' v-model='RoundOff'>
                 <input type='number' v-else class='form-control' v-model='totalRate'>
               </div>
@@ -324,12 +343,9 @@ const deleteField = async (id) => {
         </div>
       </div>
     </div>
-<!--    <div class='d-none'>-->
-      <Invoice :InvoiceDetails="InvoiceDetailsAdd"/>
-<!--    </div>-->
     <div class='w-100 py-2 d-flex justify-content-md-end justify-content-sm-center justify-content-center gap-4'>
       <button type='button' class='btn btn-outline-secondary px-5 rounded-pill'>Cancel</button>
-      <button type='button' @click='printInvoice'  class='btn btn-primary px-5 rounded-pill'>
+      <button :disabled='IsRoundOff' type='button' @click='printInvoice' class='btn btn-primary px-5 rounded-pill'>
         Save
       </button>
     </div>
